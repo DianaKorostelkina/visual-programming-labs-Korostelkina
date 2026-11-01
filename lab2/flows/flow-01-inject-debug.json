@@ -1,0 +1,56 @@
+[
+    {
+        "id": "34093f86dfa93dd4",
+        "type": "tab",
+        "label": "Поток 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ec0e5f729832e133",
+        "type": "inject",
+        "z": "34093f86dfa93dd4",
+        "name": "Korostelkina inject",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "lab2/Korostelkina/basic",
+        "payload": "Korostelkina",
+        "payloadType": "str",
+        "x": 130,
+        "y": 60,
+        "wires": [
+            [
+                "bbebfd9d412b9581"
+            ]
+        ]
+    },
+    {
+        "id": "bbebfd9d412b9581",
+        "type": "debug",
+        "z": "34093f86dfa93dd4",
+        "name": "debug basic",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 290,
+        "y": 60,
+        "wires": []
+    }
+]
