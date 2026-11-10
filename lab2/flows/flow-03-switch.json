@@ -1,0 +1,144 @@
+[
+  {
+    "id": "tab03sw",
+    "type": "tab",
+    "label": "03 Switch Korostelkina",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "inj03hi",
+    "type": "inject",
+    "z": "tab03sw",
+    "name": "Korostelkina high",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"surname\":\"Korostelkina\",\"numbers\":[3,8,15,22,7,10]}",
+    "payloadType": "json",
+    "x": 170,
+    "y": 100,
+    "wires": [
+      [
+        "fn03sw"
+      ]
+    ]
+  },
+  {
+    "id": "inj03lo",
+    "type": "inject",
+    "z": "tab03sw",
+    "name": "Korostelkina low",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"surname\":\"Korostelkina\",\"numbers\":[1,2,3,4,5,6]}",
+    "payloadType": "json",
+    "x": 170,
+    "y": 200,
+    "wires": [
+      [
+        "fn03sw"
+      ]
+    ]
+  },
+  {
+    "id": "fn03sw",
+    "type": "function",
+    "z": "tab03sw",
+    "name": "calc stats",
+    "func": "const data = msg.payload;          // объект от inject\nconst numbers = data.numbers;      // массив чисел\n\nlet sum = 0;                       // сумма всех чисел\nlet evens = [];                    // массив чётных\n\nfor (let i = 0; i < numbers.length; i++) {\n    sum += numbers[i];\n    if (numbers[i] % 2 === 0) {\n        evens.push(numbers[i]);\n    }\n}\n\nconst average = sum / numbers.length;\n\nlet level;\nif (average > 10) {\n    level = \"high\";\n} else {\n    level = \"low\";\n}\n\nconst result = {                   // итоговый объект\n    surname: data.surname,\n    sum: sum,\n    average: average,\n    evenNumbers: evens,\n    level: level\n};\n\nreturn { payload: result, topic: \"lab2/Korostelkina/function\" };",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 380,
+    "y": 150,
+    "wires": [
+      [
+        "sw03"
+      ]
+    ]
+  },
+  {
+    "id": "sw03",
+    "type": "switch",
+    "z": "tab03sw",
+    "name": "level switch",
+    "property": "payload.level",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "high",
+        "vt": "str"
+      },
+      {
+        "t": "else"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 580,
+    "y": 150,
+    "wires": [
+      [
+        "dbg03hi"
+      ],
+      [
+        "dbg03lo"
+      ]
+    ]
+  },
+  {
+    "id": "dbg03hi",
+    "type": "debug",
+    "z": "tab03sw",
+    "name": "debug HIGH",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 790,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "dbg03lo",
+    "type": "debug",
+    "z": "tab03sw",
+    "name": "debug LOW",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 790,
+    "y": 200,
+    "wires": []
+  }
+]

@@ -1,0 +1,71 @@
+[
+  {
+    "id": "tab02fn",
+    "type": "tab",
+    "label": "02 Function Korostelkina",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "inj02fn",
+    "type": "inject",
+    "z": "tab02fn",
+    "name": "Korostelkina data",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"surname\":\"Korostelkina\",\"numbers\":[3,8,15,22,7,10]}",
+    "payloadType": "json",
+    "x": 170,
+    "y": 100,
+    "wires": [
+      [
+        "fn02fn"
+      ]
+    ]
+  },
+  {
+    "id": "fn02fn",
+    "type": "function",
+    "z": "tab02fn",
+    "name": "calc stats",
+    "func": "const data = msg.payload;          // объект от inject\nconst numbers = data.numbers;      // массив чисел\n\nlet sum = 0;                       // сумма всех чисел\nlet evens = [];                    // массив чётных\n\nfor (let i = 0; i < numbers.length; i++) {\n    sum += numbers[i];\n    if (numbers[i] % 2 === 0) {\n        evens.push(numbers[i]);\n    }\n}\n\nconst average = sum / numbers.length;\n\nlet level;\nif (average > 10) {\n    level = \"high\";\n} else {\n    level = \"low\";\n}\n\nconst result = {                   // итоговый объект\n    surname: data.surname,\n    sum: sum,\n    average: average,\n    evenNumbers: evens,\n    level: level\n};\n\nreturn { payload: result, topic: \"lab2/Korostelkina/function\" };",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 100,
+    "wires": [
+      [
+        "dbg02fn"
+      ]
+    ]
+  },
+  {
+    "id": "dbg02fn",
+    "type": "debug",
+    "z": "tab02fn",
+    "name": "debug function",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 580,
+    "y": 100,
+    "wires": []
+  }
+]
