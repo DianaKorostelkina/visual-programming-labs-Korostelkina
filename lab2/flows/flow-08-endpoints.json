@@ -1,0 +1,184 @@
+[
+  {
+    "id": "tab08ep",
+    "type": "tab",
+    "label": "08 Endpoints Korostelkina SDP-UIR-241",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "in_text",
+    "type": "http in",
+    "z": "tab08ep",
+    "name": "GET /api/text (Korostelkina SDP-UIR-241)",
+    "url": "/api/text",
+    "method": "get",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 190,
+    "y": 80,
+    "wires": [
+      [
+        "ch_text"
+      ]
+    ]
+  },
+  {
+    "id": "ch_text",
+    "type": "change",
+    "z": "tab08ep",
+    "name": "set text + content-type",
+    "rules": [
+      {
+        "t": "set",
+        "p": "payload",
+        "pt": "msg",
+        "to": "Привет! Это API студентки Коростелкиной Д.А., группа СДП-УИР-241.",
+        "tot": "str"
+      },
+      {
+        "t": "set",
+        "p": "headers",
+        "pt": "msg",
+        "to": "{\"content-type\":\"text/plain; charset=utf-8\"}",
+        "tot": "json"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 450,
+    "y": 80,
+    "wires": [
+      [
+        "out_text"
+      ]
+    ]
+  },
+  {
+    "id": "out_text",
+    "type": "http response",
+    "z": "tab08ep",
+    "name": "response",
+    "statusCode": "",
+    "headers": {},
+    "x": 720,
+    "y": 80,
+    "wires": []
+  },
+  {
+    "id": "in_info",
+    "type": "http in",
+    "z": "tab08ep",
+    "name": "GET /api/info (Korostelkina SDP-UIR-241)",
+    "url": "/api/info",
+    "method": "get",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 190,
+    "y": 180,
+    "wires": [
+      [
+        "fn_info"
+      ]
+    ]
+  },
+  {
+    "id": "fn_info",
+    "type": "function",
+    "z": "tab08ep",
+    "name": "build info JSON",
+    "func": "msg.payload = {\n    student: \"Коростелкина Диана Алексеевна\",\n    group: \"СДП-УИР-241\"\n};\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 450,
+    "y": 180,
+    "wires": [
+      [
+        "out_info"
+      ]
+    ]
+  },
+  {
+    "id": "out_info",
+    "type": "http response",
+    "z": "tab08ep",
+    "name": "response",
+    "statusCode": "",
+    "headers": {},
+    "x": 720,
+    "y": 180,
+    "wires": []
+  },
+  {
+    "id": "in_items",
+    "type": "http in",
+    "z": "tab08ep",
+    "name": "GET /api/items?limit=N (Korostelkina SDP-UIR-241)",
+    "url": "/api/items",
+    "method": "get",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 190,
+    "y": 300,
+    "wires": [
+      [
+        "fn_items"
+      ]
+    ]
+  },
+  {
+    "id": "in_item_id",
+    "type": "http in",
+    "z": "tab08ep",
+    "name": "GET /api/items/:id (Korostelkina SDP-UIR-241)",
+    "url": "/api/items/:id",
+    "method": "get",
+    "upload": false,
+    "swaggerDoc": "",
+    "x": 190,
+    "y": 360,
+    "wires": [
+      [
+        "fn_items"
+      ]
+    ]
+  },
+  {
+    "id": "fn_items",
+    "type": "function",
+    "z": "tab08ep",
+    "name": "items logic (200/400/404)",
+    "func": "// Данные (массив объектов)\nconst items = [\n    { id: 1, name: \"Ноутбук\", price: 1500 },\n    { id: 2, name: \"Мышь\", price: 50 },\n    { id: 3, name: \"Клавиатура\", price: 120 },\n    { id: 4, name: \"Монитор\", price: 600 }\n];\n\nlet status = 200;\nlet body;\n\nif (msg.req.params.id !== undefined) {\n    // вариант 1: /api/items/:id  (path param)\n    const id = Number(msg.req.params.id);\n    if (!Number.isInteger(id) || id < 1) {\n        status = 400;\n        body = { error: \"Bad Request\", message: \"id должен быть положительным целым числом\" };\n    } else {\n        const found = items.find(function (item) { return item.id === id; });\n        if (!found) {\n            status = 404;\n            body = { error: \"Not Found\", message: \"Элемент с id \" + id + \" не найден\" };\n        } else {\n            body = found;\n        }\n    }\n} else {\n    // вариант 2: /api/items?limit=N  (query param)\n    let limit = items.length;\n    if (msg.req.query.limit !== undefined) {\n        const l = Number(msg.req.query.limit);\n        if (!Number.isInteger(l) || l < 1) {\n            status = 400;\n            body = { error: \"Bad Request\", message: \"limit должен быть положительным целым числом\" };\n        } else {\n            limit = l;\n        }\n    }\n    if (status === 200) {\n        const list = [];\n        for (let i = 0; i < items.length && i < limit; i++) {\n            list.push(items[i]);\n        }\n        body = list;\n    }\n}\n\nmsg.statusCode = status;\nmsg.payload = body;\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 470,
+    "y": 330,
+    "wires": [
+      [
+        "out_items"
+      ]
+    ]
+  },
+  {
+    "id": "out_items",
+    "type": "http response",
+    "z": "tab08ep",
+    "name": "response",
+    "statusCode": "",
+    "headers": {},
+    "x": 720,
+    "y": 330,
+    "wires": []
+  }
+]

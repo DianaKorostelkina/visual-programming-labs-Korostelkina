@@ -1,0 +1,138 @@
+[
+  {
+    "id": "tab07mq",
+    "type": "tab",
+    "label": "07 MQTT Korostelkina SDP-UIR-241",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "inj07",
+    "type": "inject",
+    "z": "tab07mq",
+    "name": "publish every 5s",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "5",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 170,
+    "y": 100,
+    "wires": [
+      [
+        "fn07"
+      ]
+    ]
+  },
+  {
+    "id": "fn07",
+    "type": "function",
+    "z": "tab07mq",
+    "name": "random temperature",
+    "func": "// случайная температура 15.0 ... 30.0\nconst temperature = Math.round((15 + Math.random() * 15) * 10) / 10;\n\nmsg.payload = {\n    student: \"Korostelkina\",\n    group: \"SDP-UIR-241\",\n    temperature: temperature,\n    time: new Date().toISOString()\n};\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 400,
+    "y": 100,
+    "wires": [
+      [
+        "out07"
+      ]
+    ]
+  },
+  {
+    "id": "out07",
+    "type": "mqtt out",
+    "z": "tab07mq",
+    "name": "publish to HiveMQ",
+    "topic": "student/Korostelkina/lab2/temperature-SDP-UIR-241",
+    "qos": "0",
+    "retain": "false",
+    "respTopic": "",
+    "contentType": "",
+    "userProps": "",
+    "correl": "",
+    "expiry": "",
+    "broker": "brk07",
+    "x": 650,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "in07",
+    "type": "mqtt in",
+    "z": "tab07mq",
+    "name": "subscribe from HiveMQ",
+    "topic": "student/Korostelkina/lab2/temperature-SDP-UIR-241",
+    "qos": "0",
+    "datatype": "auto-detect",
+    "broker": "brk07",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 200,
+    "y": 220,
+    "wires": [
+      [
+        "dbg07"
+      ]
+    ]
+  },
+  {
+    "id": "dbg07",
+    "type": "debug",
+    "z": "tab07mq",
+    "name": "debug mqtt in (complete msg)",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 480,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "brk07",
+    "type": "mqtt-broker",
+    "name": "HiveMQ public",
+    "broker": "broker.hivemq.com",
+    "port": "1883",
+    "clientid": "",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true,
+    "autoUnsubscribe": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": ""
+  }
+]
