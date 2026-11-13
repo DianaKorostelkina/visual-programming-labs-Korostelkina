@@ -1,0 +1,74 @@
+[
+  {
+    "id": "tab05tp",
+    "type": "tab",
+    "label": "05 Template Korostelkina SDP-UIR-241",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "inj05",
+    "type": "inject",
+    "z": "tab05tp",
+    "name": "Korostelkina SDP-UIR-241 data",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "lab2/Korostelkina/SDP-UIR-241/template",
+    "payload": "{\"name\": \"Коростелкина Диана Алексеевна\", \"group\": \"СДП-УИР-241\", \"subject\": \"Технологии визуального программирования\"}",
+    "payloadType": "json",
+    "x": 210,
+    "y": 100,
+    "wires": [
+      [
+        "tp05"
+      ]
+    ]
+  },
+  {
+    "id": "tp05",
+    "type": "template",
+    "z": "tab05tp",
+    "name": "mustache to JSON",
+    "field": "payload",
+    "fieldType": "msg",
+    "format": "json",
+    "syntax": "mustache",
+    "template": "{\n  \"student\": \"{{payload.name}}\",\n  \"group\": \"{{payload.group}}\",\n  \"subject\": \"{{payload.subject}}\",\n  \"message\": \"Лабораторная работа №2 выполнена: {{payload.name}}, группа {{payload.group}}\"\n}",
+    "output": "json",
+    "x": 470,
+    "y": 100,
+    "wires": [
+      [
+        "dbg05"
+      ]
+    ]
+  },
+  {
+    "id": "dbg05",
+    "type": "debug",
+    "z": "tab05tp",
+    "name": "debug template (complete msg)",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "true",
+    "targetType": "full",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 740,
+    "y": 100,
+    "wires": []
+  }
+]
