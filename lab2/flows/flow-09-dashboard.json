@@ -1,0 +1,146 @@
+[
+  {
+    "id": "tab09db",
+    "type": "tab",
+    "label": "09 Dashboard Korostelkina SDP-UIR-241",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "ui_tab09",
+    "type": "ui_tab",
+    "name": "Датчик Korostelkina SDP-UIR-241",
+    "icon": "dashboard",
+    "disabled": false,
+    "hidden": false
+  },
+  {
+    "id": "ui_grp09",
+    "type": "ui_group",
+    "name": "Температура в комнате",
+    "tab": "ui_tab09",
+    "order": 1,
+    "disp": true,
+    "width": "6",
+    "collapse": false,
+    "className": ""
+  },
+  {
+    "id": "inj09",
+    "type": "inject",
+    "z": "tab09db",
+    "name": "sensor tick every 2s",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "2",
+    "crontab": "",
+    "once": true,
+    "onceDelay": "1",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 190,
+    "y": 120,
+    "wires": [
+      [
+        "fn09"
+      ]
+    ]
+  },
+  {
+    "id": "fn09",
+    "type": "function",
+    "z": "tab09db",
+    "name": "temperature sensor",
+    "func": "// имитация датчика температуры: плавное случайное изменение\nlet t = context.get(\"t\");\nif (t === undefined) {\n    t = 22;                       // стартовое значение\n}\n\nt = t + (Math.random() - 0.5) * 2;   // сдвиг от -1 до +1\n\nif (t < 15) { t = 15; }              // границы 15..30\nif (t > 30) { t = 30; }\n\ncontext.set(\"t\", t);\n\nmsg.payload = Math.round(t * 10) / 10;\nmsg.topic = \"Температура\";\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 430,
+    "y": 120,
+    "wires": [
+      [
+        "gauge09",
+        "chart09"
+      ]
+    ]
+  },
+  {
+    "id": "gauge09",
+    "type": "ui_gauge",
+    "z": "tab09db",
+    "name": "",
+    "group": "ui_grp09",
+    "order": 1,
+    "width": 0,
+    "height": 0,
+    "gtype": "gage",
+    "title": "Текущая температура",
+    "label": "°C",
+    "format": "{{value}}",
+    "min": 0,
+    "max": 40,
+    "colors": [
+      "#00b500",
+      "#e6e600",
+      "#ca3838"
+    ],
+    "seg1": "",
+    "seg2": "",
+    "diff": false,
+    "className": "",
+    "x": 690,
+    "y": 80,
+    "wires": []
+  },
+  {
+    "id": "chart09",
+    "type": "ui_chart",
+    "z": "tab09db",
+    "name": "",
+    "group": "ui_grp09",
+    "order": 2,
+    "width": 0,
+    "height": 0,
+    "label": "История температуры (°C)",
+    "chartType": "line",
+    "legend": "false",
+    "xformat": "HH:mm:ss",
+    "interpolate": "linear",
+    "nodata": "Нет данных",
+    "dot": false,
+    "ymin": "10",
+    "ymax": "35",
+    "removeOlder": "5",
+    "removeOlderPoints": "",
+    "removeOlderUnit": "60",
+    "cutout": 0,
+    "useOneColor": false,
+    "useUTC": false,
+    "colors": [
+      "#1f77b4",
+      "#aec7e8",
+      "#ff7f0e",
+      "#2ca02c",
+      "#98df8a",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "outputs": 1,
+    "useDifferentColor": false,
+    "className": "",
+    "x": 690,
+    "y": 160,
+    "wires": [
+      []
+    ]
+  }
+]
