@@ -1,0 +1,190 @@
+[
+    {
+        "id": "e5807436a4948aea",
+        "type": "tab",
+        "label": "10 Telegram Korostelkina SDP-UIR-241",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "99895f54739be7c4",
+        "type": "telegram command",
+        "z": "e5807436a4948aea",
+        "name": "tvl_lab2_Korostelkina_bot",
+        "command": "/start",
+        "description": "",
+        "registercommand": false,
+        "language": "",
+        "scope": "default",
+        "bot": "498b458f3ddb5a91",
+        "strict": false,
+        "hasresponse": true,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 2,
+        "x": 130,
+        "y": 160,
+        "wires": [
+            [
+                "a480c234cb6bffc2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "a480c234cb6bffc2",
+        "type": "function",
+        "z": "e5807436a4948aea",
+        "name": "reply /start",
+        "func": "const chatId = msg.payload.chatId;\nlet name = \"\";\nif (msg.originalMessage && msg.originalMessage.from) {\n    name = msg.originalMessage.from.first_name;\n}\n\nmsg.payload = {\n    chatId: chatId,\n    type: \"message\",\n    content: \"Привет, \" + name + \"! Я бот лабораторной работы №2.\\n\" +\n             \"Автор: Коростелкина Д.А., группа СДП-УИР-241.\\n\" +\n             \"Команды: /start, /time. Любое другое сообщение я повторю.\"\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 160,
+        "wires": [
+            [
+                "3d93ae4244d6047b"
+            ]
+        ]
+    },
+    {
+        "id": "3d93ae4244d6047b",
+        "type": "telegram sender",
+        "z": "e5807436a4948aea",
+        "name": "",
+        "bot": "498b458f3ddb5a91",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 550,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b1edfd7d959c92d2",
+        "type": "telegram command",
+        "z": "e5807436a4948aea",
+        "name": "",
+        "command": "/time",
+        "description": "",
+        "registercommand": false,
+        "language": "",
+        "scope": "default",
+        "bot": "498b458f3ddb5a91",
+        "strict": false,
+        "hasresponse": true,
+        "useregex": false,
+        "removeregexcommand": false,
+        "outputs": 2,
+        "x": 130,
+        "y": 240,
+        "wires": [
+            [
+                "b3121574bbc8bf5d"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "b3121574bbc8bf5d",
+        "type": "function",
+        "z": "e5807436a4948aea",
+        "name": "reply /time",
+        "func": "const time = new Date().toLocaleString(\"ru-RU\", { timeZone: \"Europe/Minsk\" });\n\nmsg.payload = {\n    chatId: msg.payload.chatId,\n    type: \"message\",\n    content: \"Текущее время (Минск): \" + time\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 240,
+        "wires": [
+            [
+                "3d93ae4244d6047b"
+            ]
+        ]
+    },
+    {
+        "id": "fce10e35eaa6e26c",
+        "type": "telegram receiver",
+        "z": "e5807436a4948aea",
+        "name": "",
+        "bot": "498b458f3ddb5a91",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "hasinput": false,
+        "inputs": 0,
+        "handleallupdates": false,
+        "handleprocessupdates": false,
+        "x": 110,
+        "y": 300,
+        "wires": [
+            [
+                "8e12a5dea666fb08"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "8e12a5dea666fb08",
+        "type": "function",
+        "z": "e5807436a4948aea",
+        "name": "echo",
+        "func": "const text = msg.payload.content;\n\n// команды (начинаются с \"/\") обрабатывают ноды command, их не повторяем\nif (typeof text !== \"string\" || text.startsWith(\"/\")) {\n    return null;\n}\n\nmsg.payload = {\n    chatId: msg.payload.chatId,\n    type: \"message\",\n    content: \"Вы написали: \" + text\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 350,
+        "y": 300,
+        "wires": [
+            [
+                "3d93ae4244d6047b"
+            ]
+        ]
+    },
+    {
+        "id": "498b458f3ddb5a91",
+        "type": "telegram bot",
+        "botname": "tvl_lab2_Korostelkina_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "pollinterval": 300,
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": 6667,
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbothost": "0.0.0.0",
+        "localbotport": 8443,
+        "publicbotport": 8443,
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "d344c8fbd195c206",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-telegrambot": "19.0.3"
+        }
+    }
+]
