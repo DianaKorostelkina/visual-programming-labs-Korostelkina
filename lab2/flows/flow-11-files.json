@@ -1,0 +1,175 @@
+[
+  {
+    "id": "tab11fl",
+    "type": "tab",
+    "label": "11 Files Korostelkina SDP-UIR-241",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "inj11w",
+    "type": "inject",
+    "z": "tab11fl",
+    "name": "WRITE record",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 160,
+    "y": 80,
+    "wires": [
+      [
+        "fn11"
+      ]
+    ]
+  },
+  {
+    "id": "fn11",
+    "type": "function",
+    "z": "tab11fl",
+    "name": "build CSV line",
+    "func": "// формируем одну CSV-строку: время;студент;группа;значение\nconst time = new Date().toISOString();\nconst value = Math.round(Math.random() * 100);\n\nmsg.payload = time + \";Korostelkina;SDP-UIR-241;\" + value + \"\\n\";\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 80,
+    "wires": [
+      [
+        "fout11"
+      ]
+    ]
+  },
+  {
+    "id": "fout11",
+    "type": "file",
+    "z": "tab11fl",
+    "name": "append to records.csv",
+    "filename": "/data/lab2/records.csv",
+    "filenameType": "str",
+    "appendNewline": false,
+    "createDir": true,
+    "overwriteFile": "false",
+    "encoding": "none",
+    "x": 610,
+    "y": 80,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "inj11r",
+    "type": "inject",
+    "z": "tab11fl",
+    "name": "READ file",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 150,
+    "y": 180,
+    "wires": [
+      [
+        "fin11"
+      ]
+    ]
+  },
+  {
+    "id": "fin11",
+    "type": "file in",
+    "z": "tab11fl",
+    "name": "read records.csv",
+    "filename": "/data/lab2/records.csv",
+    "filenameType": "str",
+    "format": "utf8",
+    "chunk": false,
+    "sendError": false,
+    "encoding": "none",
+    "allProps": false,
+    "x": 370,
+    "y": 180,
+    "wires": [
+      [
+        "dbg11"
+      ]
+    ]
+  },
+  {
+    "id": "dbg11",
+    "type": "debug",
+    "z": "tab11fl",
+    "name": "debug file content",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 610,
+    "y": 180,
+    "wires": []
+  },
+  {
+    "id": "inj11d",
+    "type": "inject",
+    "z": "tab11fl",
+    "name": "RESET (delete file)",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 170,
+    "y": 280,
+    "wires": [
+      [
+        "fdel11"
+      ]
+    ]
+  },
+  {
+    "id": "fdel11",
+    "type": "file",
+    "z": "tab11fl",
+    "name": "delete records.csv",
+    "filename": "/data/lab2/records.csv",
+    "filenameType": "str",
+    "appendNewline": false,
+    "createDir": false,
+    "overwriteFile": "delete",
+    "encoding": "none",
+    "x": 410,
+    "y": 280,
+    "wires": [
+      []
+    ]
+  }
+]
