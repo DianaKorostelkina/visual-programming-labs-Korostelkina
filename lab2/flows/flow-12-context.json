@@ -1,0 +1,207 @@
+[
+  {
+    "id": "tab12cx",
+    "type": "tab",
+    "label": "12 Context Korostelkina SDP-UIR-241",
+    "disabled": false,
+    "info": "",
+    "env": [
+      {
+        "name": "STUDENT_NAME",
+        "value": "Korostelkina",
+        "type": "str"
+      },
+      {
+        "name": "STUDENT_GROUP",
+        "value": "SDP-UIR-241",
+        "type": "str"
+      }
+    ]
+  },
+  {
+    "id": "inj12a",
+    "type": "inject",
+    "z": "tab12cx",
+    "name": "COUNT +1",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 160,
+    "y": 80,
+    "wires": [
+      [
+        "fn12a"
+      ]
+    ]
+  },
+  {
+    "id": "fn12a",
+    "type": "function",
+    "z": "tab12cx",
+    "name": "counter++ (flow/global/env)",
+    "func": "// 1) flow context: счётчик живёт между сообщениями\nlet count = flow.get(\"counter\") || 0;\ncount = count + 1;\nflow.set(\"counter\", count);\n\n// 2) global context: время последнего нажатия, доступно всем потокам\nglobal.set(\"lastRun\", new Date().toISOString());\n\n// 3) environment variables: значения заданы в свойствах потока\nmsg.payload = {\n    student: env.get(\"STUDENT_NAME\"),\n    group: env.get(\"STUDENT_GROUP\"),\n    counter: count\n};\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 380,
+    "y": 80,
+    "wires": [
+      [
+        "dbg12a"
+      ]
+    ]
+  },
+  {
+    "id": "dbg12a",
+    "type": "debug",
+    "z": "tab12cx",
+    "name": "debug counter",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 620,
+    "y": 80,
+    "wires": []
+  },
+  {
+    "id": "inj12b",
+    "type": "inject",
+    "z": "tab12cx",
+    "name": "SHOW counter",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 160,
+    "y": 180,
+    "wires": [
+      [
+        "fn12b"
+      ]
+    ]
+  },
+  {
+    "id": "fn12b",
+    "type": "function",
+    "z": "tab12cx",
+    "name": "read context",
+    "func": "const count = flow.get(\"counter\") || 0;\nconst lastRun = global.get(\"lastRun\") || \"ещё не запускалось\";\n\nmsg.payload = \"Счётчик (flow context) = \" + count + \"; последнее нажатие (global context) = \" + lastRun;\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 380,
+    "y": 180,
+    "wires": [
+      [
+        "dbg12b"
+      ]
+    ]
+  },
+  {
+    "id": "dbg12b",
+    "type": "debug",
+    "z": "tab12cx",
+    "name": "debug read",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 620,
+    "y": 180,
+    "wires": []
+  },
+  {
+    "id": "inj12c",
+    "type": "inject",
+    "z": "tab12cx",
+    "name": "RESET counter",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 160,
+    "y": 280,
+    "wires": [
+      [
+        "fn12c"
+      ]
+    ]
+  },
+  {
+    "id": "fn12c",
+    "type": "function",
+    "z": "tab12cx",
+    "name": "reset counter",
+    "func": "flow.set(\"counter\", 0);\nmsg.payload = \"Счётчик сброшен\";\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 380,
+    "y": 280,
+    "wires": [
+      [
+        "dbg12c"
+      ]
+    ]
+  },
+  {
+    "id": "dbg12c",
+    "type": "debug",
+    "z": "tab12cx",
+    "name": "debug reset",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "payload",
+    "targetType": "msg",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 620,
+    "y": 280,
+    "wires": []
+  }
+]
